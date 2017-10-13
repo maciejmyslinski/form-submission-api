@@ -8,7 +8,7 @@ gulp.task('default', () => {
     .pipe(eslint())
     .pipe(eslint.failOnError())
     .pipe(babel({
-      presets: ['env'],
+      presets: ['env', 'flow'],
     }))
     .pipe(gulp.dest('build'));
 });
