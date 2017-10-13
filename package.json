@@ -19,5 +19,8 @@
   },
   "scripts": {
     "build": "gulp"
+  },
+  "dependencies": {
+    "ramda": "^0.25.0"
   }
 }

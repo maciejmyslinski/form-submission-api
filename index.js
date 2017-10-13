@@ -1,4 +1,5 @@
 // @flow
+import R from 'ramda';
 
 type QuestionType =
   | 'CHECKBOX'
@@ -25,14 +26,29 @@ function submitAForm(params: {
   responses: Array<{
     id: number,
     type: QuestionType,
-    response: ResponseType,
+    value: ResponseType,
   }>,
 }): number {
   const { formId, responses } = params;
   const form = FormApp.openById(formId);
-  const items = form.getItems();
   const formResponse = form.createResponse();
-  // for every response call formResponse.withItemResponse(response);
+  responses.forEach((response) => {
+    const item = form.getItemById(response.id);
+    if (R.isNil(item)) return;
+    const itemTypeString = item.getType.toString();
+    let typedItem;
+    switch (itemTypeString) {
+      case 'CHECKBOX': {
+        typedItem = item.asCheckboxItem();
+        if (R.type(response.value) === 'Array' && R.type(response.value[0]) === 'String') {
+          const itemResponse = typedItem.createResponse(response.value);
+          formResponse.withItemResponse(itemResponse);
+        }
+        break;
+      }
+      default:
+    }
+  });
   formResponse.submit();
   return params || 200;
 }
