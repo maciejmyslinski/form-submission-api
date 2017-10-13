@@ -16,7 +16,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [['env', { modules: false, loose: true }], 'flow', 'es3'],
+              presets: ['env', 'flow', 'es3'],
             },
           },
           'eslint-loader',

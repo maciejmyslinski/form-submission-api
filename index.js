@@ -1,5 +1,5 @@
 // @flow
-import R from 'ramda';
+import * as R from 'ramda';
 
 type QuestionType =
   | 'CHECKBOX'
@@ -22,7 +22,7 @@ type ResponseType =
   | Array<Array<String>>
   | { hours: Number, minutes: Number, seconds: Number };
 
-function submitAForm(params: {
+export function submitAForm(params: {
   formId: string,
   responses: Array<{
     id: number,
@@ -38,7 +38,7 @@ function submitAForm(params: {
     const { value } = response;
     const item = form.getItemById(response.id);
     if (R.isNil(item)) return;
-    const itemTypeString = item.getType.toString();
+    const itemTypeString = String(item.getType());
     switch (itemTypeString) {
       case 'CHECKBOX': {
         const isResponseShapeValid = R.type(value) === 'Array' && R.type(value[0]) === 'String';
@@ -81,7 +81,8 @@ function submitAForm(params: {
           value.seconds >= 0 &&
           value.seconds <= 59;
         if (isResponseShapeValid) {
-          formResponse.withItemResponse(item.asDurationItem().createResponse(value.hours, value.minutes, value.seconds));
+          formResponse.withItemResponse(item.asDurationItem()
+            .createResponse(value.hours, value.minutes, value.seconds));
         }
         break;
       }
